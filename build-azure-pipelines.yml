@@ -6,6 +6,9 @@
 trigger:
 - master
 
+variables:
+  buildConfiguration: 'Release'
+  
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -13,7 +16,7 @@ steps:
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '3.1.300'
+    version: '5.0.100'
 
 - task: Npm@1
   inputs:
@@ -40,12 +43,13 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--no-restore --configuration $(buildConfiguration)'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
     projects: '**/*Tests.csproj'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   inputs:
