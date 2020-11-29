@@ -8,6 +8,8 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
+  wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
+  dotnetSdkVersion: '5.0.100'
   
 pool:
   vmImage: 'ubuntu-latest'
@@ -17,7 +19,7 @@ steps:
   displayName: 'Sélection de la version de .NET'
   inputs:
     packageType: 'sdk'
-    version: '5.0.100'
+    version: '$(dotnetSdkVersion)'
 
 - task: Npm@1
   displayName: 'Installation des dépendances dans package.json'
@@ -27,7 +29,7 @@ steps:
 - task: CmdLine@2
   displayName: 'Génération des fichiers Sass'
   inputs:
-    script: './node_modules/.bin/node-sass Tailspin.SpaceGame.Web/wwwroot --output Tailspin.SpaceGame.Web/wwwroot'
+    script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
     
 - task: gulp@0
   displayName: 'Minifier les fichiers statiques'
