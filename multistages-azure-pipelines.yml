@@ -6,16 +6,82 @@
 trigger:
  - master
 
+variables:
+  buildConfiguration: 'Release'
+  serviceConnection : 'az-serviceprincipal'
+
 pool:
   vmImage: 'ubuntu-latest'
 
 stages:
 - stage : 'Build' 
   displayName:  'Génération et exécution des tests'
+  variables:
+   wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
+   dotnetSdkVersion: '5.0.100'
   jobs:
     - job : 'Build'
       steps:
-      - script: echo build
+      - task: UseDotNet@2
+        displayName: 'Sélection de la version de .NET'
+        inputs:
+          packageType: 'sdk'
+          version: '$(dotnetSdkVersion)'
+
+      - task: Npm@1
+        displayName: 'Installation des dépendances dans package.json'
+        inputs:
+         command: 'install'
+
+      - task: CmdLine@2
+        displayName: 'Génération des fichiers Sass'
+        inputs:
+         script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
+    
+      - task: gulp@0
+        displayName: 'Minifier les fichiers statiques'
+        inputs:
+         gulpFile: 'gulpfile.js'
+         targets: 
+         gulpjs: 'node_modules/gulp/bin/gulp.js'
+         enableCodeCoverage: false
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Restaurer les packages'
+        inputs:
+         command: 'restore'
+         feedsToUse: 'select'
+         projects: '**/*.csproj'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Générer le projet'
+        inputs:
+         command: 'build'
+         projects: '**/*.csproj'
+         arguments: '--configuration $(buildConfiguration)'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Exécuter les tests unitaires'
+        inputs:
+         command: 'test'
+         projects: '**/*Tests.csproj'
+         arguments: '--configuration $(buildConfiguration)'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Publier le projet'
+        inputs:
+         command: 'publish'
+         publishWebProjects: false
+         projects: '**/*.csproj'
+         arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+         zipAfterPublish: true
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publier le package dans Azure Pipeline'
+        inputs:
+         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+         ArtifactName: 'drop'
+         publishLocation: 'Container'
 
 - stage : 'DeployToDev' 
   displayName:  'Déploiment en Dev'
