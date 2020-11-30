@@ -31,9 +31,9 @@ stages:
 
 - stage : 'DeployToProd' 
   displayName:  'Déploiment en production'
-  dependsOn: 'Dev'
+  dependsOn: 'DeployToDev'
   jobs:
-    - deployment : 'DeployToDev'
+    - deployment : 'DeployToProd'
       environment: 'dev'
       strategy:
         runOnce:
