@@ -3,18 +3,11 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger: none
-
-pr:
-  branches:
-    include:
-    - master
+trigger:
+ - master
 
 pool:
   vmImage: 'ubuntu-latest'
-
-variables:
-- group: demo-iac-vg
 
 stages:
 - stage : 'Build' 
