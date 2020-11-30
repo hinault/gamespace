@@ -22,6 +22,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: 'Env/WebSite.json'
     csmParametersFile: 'Env/WebSite.parameters.json'
-    overrideParameters: '-siteName azapp-spacegame-01 -hostingPlanName azappplan-spacegame-01'
+    overrideParameters: '-siteName azappspacegame01 -hostingPlanName azappplanspacegame01'
     deploymentMode: 'Incremental'
+
   
