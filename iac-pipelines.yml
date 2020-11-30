@@ -15,7 +15,6 @@ steps:
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'az-serviceprincipal'
-    subscriptionId: 'f721ad25-4d9a-4198-a2bf-26bd71c556be'
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'spacegame-rg'
     location: 'France Central'
