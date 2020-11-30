@@ -1,0 +1,49 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+
+pr:
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: demo-iac-vg
+
+stages:
+- stage : 'Build' 
+  displayName:  'Génération et exécution des tests'
+  jobs:
+    - job : 'Build'
+      steps:
+      - script: 'Echo build'
+
+- stage : 'DeployToDev' 
+  displayName:  'Déploiment en Dev'
+  dependsOn: 'Build'
+  jobs:
+    - deployment : 'DeployToDev'
+      environment: 'dev'
+      strategy:
+        runOnce:
+         deploy:
+           steps:
+             - script: 'Echo Dev'
+
+- stage : 'DeployToProd' 
+  displayName:  'Déploiment en production'
+  dependsOn: 'Dev'
+  jobs:
+    - deployment : 'DeployToDev'
+      environment: 'dev'
+      strategy:
+        runOnce:
+         deploy:
+           steps:
+             - script: 'Echo Dev'
