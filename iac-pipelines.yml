@@ -1,0 +1,27 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Déploiment des ressources dans Azure'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'az-serviceprincipal'
+    subscriptionId: 'f721ad25-4d9a-4198-a2bf-26bd71c556be'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'spacegame-rg'
+    location: 'France Central'
+    templateLocation: 'Linked artifact'
+    csmFile: 'Env/WebSite.json'
+    csmParametersFile: 'Env/WebSite.parameters.json'
+    overrideParameters: '-siteName azapp-spacegame-01 -hostingPlanName azappplan-spacegame-01'
+    deploymentMode: 'Incremental'
+  
