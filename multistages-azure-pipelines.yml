@@ -8,7 +8,6 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
-  serviceConnection : 'az-serviceprincipal'
 
 pool:
   vmImage: 'ubuntu-latest'
