@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 trigger:
-- none
+- master
 
 variables:
   buildConfiguration: 'Release'
