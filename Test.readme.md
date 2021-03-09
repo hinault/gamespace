@@ -1,1 +1,0 @@
-[![Build Status](https://dev.azure.com/hinault/ProjetDemo/_apis/build/status/hinault.gamespace?branchName=master)](https://dev.azure.com/hinault/ProjetDemo/_build/latest?definitionId=85&branchName=master)
